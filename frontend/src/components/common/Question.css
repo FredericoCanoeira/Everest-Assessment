@@ -1,0 +1,46 @@
+.question-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .question-container h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Aumentei o espaçamento entre os botões */
+    margin-top: 20px; /* Adicionei um pequeno espaço superior */
+  }
+  
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Exibe duas colunas */
+    gap: 10px;
+    justify-content: center;
+
+  }
+  
+  .option-button {
+    padding: 12px 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-align: center;
+    color: rgb(80, 78, 78);
+    width: 100%; 
+  }
+  
+  .option-button:hover {
+    background-color: #0F7BE6;
+    color: rgb(255, 255, 255);
+  }
+  

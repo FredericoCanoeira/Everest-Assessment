@@ -1,0 +1,58 @@
+/* Cabeçalho */
+.header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .link {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  /* Conteúdo principal */
+  .main {
+    padding: 20px;
+    min-height: calc(100vh - 160px); /* Garante que o conteúdo ocupe pelo menos 80vh, mas sempre espaço suficiente para o footer */
+    box-sizing: border-box;
+    overflow-x: hidden; /* Impede a rolagem horizontal */
+    overflow-y: auto; 
+  }
+  
+  /* Rodapé */
+  .footer {
+    text-align: center;
+    padding: 35px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #ddd;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    color: #67748E;
+    font-size: 8px;
+  }
+  
+
+/* Corpo da página */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow-x: hidden;  /* Impede a barra de rolagem horizontal */
+}
+
+/* Evitar barras de rolagem na parte inferior */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Isso garante que o rodapé estará sempre na parte inferior */
+}

@@ -1,0 +1,79 @@
+.dashboard-container { 
+  padding: 20px;
+  margin-left: 260px; /* Evita sobreposição do sidebar */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 13px; /* 🔹 Mantendo o tamanho original */
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+/* Botão "Ver Relatório" */
+.btn-ver {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-ver:hover {
+  background-color: #1146b9;
+}
+
+/* 🔎 Campo de busca estilizado */
+.search-input {
+  width: 300px;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* ❌ Botão "Limpar Todos os Dados" escondido no canto inferior direito */
+.btn-clear-hidden {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  background-color: #ffcccc;
+  color: #900;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.2; /* Bem discreto até passar o mouse */
+  transition: opacity 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-clear-hidden:hover {
+  opacity: 1;
+  background-color: #ffaaaa;
+  transform: scale(1.1);
+}

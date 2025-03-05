@@ -1,0 +1,69 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 15px 0;
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar ul li a:hover {
+  text-decoration: underline;
+
+}
+
+.logout-button:hover {
+  background-color: rgb(255, 62, 62);
+}
+
+.logout-container {
+  position: absolute;
+  bottom: 20px; /* Mantém o botão fixo no rodapé */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-icon {
+  font-size: 35px; /* Tamanho aumentado */
+  color: #fdfdfd; /* Cor vermelha para destacar logout */
+  transition: 0.3s;
+  cursor: pointer;
+}
+
+.logout-text {
+  font-size: 14px;
+  color: white;
+  margin-top: 5px;
+}
+
+.logout-container:hover .logout-icon {
+  color: #cc0000; /* Efeito hover no ícone */
+}
