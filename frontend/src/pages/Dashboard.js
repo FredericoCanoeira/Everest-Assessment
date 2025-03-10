@@ -362,7 +362,7 @@ const Dashboard = () => {
                   <td>{report.bi}</td>
                   <td>
                     <button
-                      onClick={() => navigate(`/relatorio/${report.userId}`)}
+                      onClick={() => navigate(`/relatorio/${report?.userId}`)}
                       className="btn-ver"
                     >
                       Ver Relatório

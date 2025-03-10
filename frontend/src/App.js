@@ -22,6 +22,7 @@ import Relatorio from "./pages/Relatorio";
 
 // Layout
 import Layout from "./components/common/Layout";
+import EditRelatorio from "./pages/EditRelatorio";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/solicitacao" element={<Layout><Solicitacao /></Layout>} />
           <Route path="/obrigado" element={<Obrigado />} />
           <Route path="/relatorio/:id" element={<Relatorio />} />
+          <Route path="/edit-relatorio/:id" element={<Layout><EditRelatorio /></Layout>} />
           
 
           {/* Rota protegida do Painel Administrativo */}

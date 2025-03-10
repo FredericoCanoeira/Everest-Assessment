@@ -1379,6 +1379,7 @@ const AssessmentForm = () => {
   const competenciesKeys = Object.keys(competencies);
   const currentCompetency = competenciesKeys[currentCompetencyIndex];
   const currentQuestion = competencies[currentCompetency][currentQuestionIndex];
+  console.log("currentQuestion",currentQuestion)
 
   const handleOptionChange = (answer) => {
     if (answer.followUp) {
@@ -1464,22 +1465,49 @@ const AssessmentForm = () => {
     setIsCompleted(true);
   };
 
+  // const handleSubmit = async () => {
+  //   const requestData = {
+  //     userId,
+  //     respostas: formData.respostas,
+  //     totalScore,
+  //     finalScore,
+  //     category,
+  //   };
+
+  //   try {
+  //     const response = await fetch("http://localhost:5000/api/assessment", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(requestData),
+  //     });
+
+  //     if (response.ok) {
+  //       navigate("/payment-information", { state: { userId, totalScore, category } });
+  //     } else {
+  //       alert("Erro ao enviar a avaliação");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro na requisição:", error);
+  //   }
+  // };
+ 
   const handleSubmit = async () => {
-    const requestData = {
+    const payload = {
       userId,
-      respostas: formData.respostas,
+      respostas: formData?.respostas,
       totalScore,
       finalScore,
       category,
+      
     };
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/assessment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
+        body: JSON.stringify(payload),
       });
-
+  
       if (response.ok) {
         navigate("/payment-information", { state: { userId, totalScore, category } });
       } else {

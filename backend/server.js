@@ -755,7 +755,7 @@ require("dotenv").config();
 const app = express();
 const port = 5000;
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -771,10 +771,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const mongoURI = process.env.DB_URI || "mongodb://localhost:27017/EverestAppDB";
+const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/EverestAppDB";
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
 }).then(() => console.log("✅ Conectado ao MongoDB"))
   .catch(err => console.error("❌ Erro ao conectar ao MongoDB:", err));
 
@@ -786,7 +787,8 @@ const AssessmentSchema = new mongoose.Schema({
     finalScore: { type: Number, required: true },
     category: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
-});
+  });
+  
 
 const SolicitationSchema = new mongoose.Schema({
     userId: { type: String, required: true },
@@ -803,29 +805,25 @@ const Solicitation = mongoose.model("Solicitation", SolicitationSchema);
 // 🛠️ Rota para salvar uma nova avaliação
 app.post("/api/assessment", async (req, res) => {
     try {
-        console.log("📌 Recebendo requisição para /api/assessment");
-        console.log("📌 Dados recebidos:", req.body);
-
-        const { userId, respostas, totalScore, finalScore, category } = req.body;
-
-        // Verifica se os dados obrigatórios estão presentes
-        if (!userId || !respostas || totalScore === undefined || finalScore === undefined || !category) {
-            console.error("❌ Erro: Campos obrigatórios faltando!");
-            return res.status(400).json({ error: "Todos os campos são obrigatórios." });
-        }
-
-        // Criando o novo documento
-        const novaAvaliacao = new Assessment({ userId, respostas, totalScore, finalScore, category });
-
-        await novaAvaliacao.save();
-        console.log("✅ Avaliação salva com sucesso!", novaAvaliacao);
-
-        res.status(200).json({ message: "Avaliação salva com sucesso!", userId });
+      console.log("Request Body ghhhhy:", req.body); // Log the incoming request
+  
+      const { userId, respostas, totalScore, finalScore, category } = req.body;
+  
+      if (!userId || !respostas || totalScore === undefined || finalScore === undefined || !category) {
+        console.error("Missing required fields");
+        return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+      }
+  
+      const novaAvaliacao = new Assessment({ userId, respostas, totalScore, finalScore, category });
+      await novaAvaliacao.save();
+  
+      console.log("Avaliação salva com sucesso:", novaAvaliacao);
+      res.status(200).json({ message: "Avaliação salva com sucesso!", userId });
     } catch (error) {
-        console.error("❌ Erro ao salvar avaliação:", error);
-        res.status(500).json({ error: "Erro ao salvar avaliação" });
+      console.error("Erro ao salvar avaliação:", error);
+      res.status(500).json({ error: "Erro ao salvar avaliação" });
     }
-});
+  });
 
 
 // 🛠️ Rota para salvar uma solicitação
@@ -853,13 +851,13 @@ app.post("/api/solicitacao", async (req, res) => {
 // 🛠️ Rota para buscar usuários cadastrados
 app.get("/api/users", async (req, res) => {
     try {
-        const users = await Solicitation.find({}, "userId nome email telefone bi createdAt");
-        res.status(200).json(users);
+      const users = await Solicitation.find({}, "userId nome email telefone bi createdAt");
+      res.status(200).json(users);
     } catch (error) {
-        console.error("❌ Erro ao buscar usuários:", error);
-        res.status(500).json({ error: "Erro ao buscar usuários" });
+      console.error("❌ Erro ao buscar usuários:", error);
+      res.status(500).json({ error: "Erro ao buscar usuários" });
     }
-});
+  });
 
 // 🛠️ Rota para buscar relatórios de avaliações
 app.get("/api/reports", async (req, res) => {
@@ -900,18 +898,61 @@ app.delete("/api/assessments", async (req, res) => {
 app.get("/api/report/:userId", async (req, res) => {
     try {
         const { userId } = req.params;
+        console.log("Searching for userId:", userId);
+
         const report = await Assessment.findOne({ userId });
+        console.log("Report found:", report);
 
         if (!report) {
             return res.status(404).json({ error: "Relatório não encontrado" });
         }
 
-        res.status(200).json(report);
+        const userInfo = await Solicitation.findOne({ userId });
+        console.log("User info found:", userInfo);
+
+        if (!userInfo) {
+            return res.status(404).json({ error: "Informações do usuário não encontradas" });
+        }
+
+        const fullReport = {
+            ...userInfo.toObject(),
+            ...report.toObject(),
+        };
+
+        res.status(200).json(fullReport);
+        console.log("fullReport",fullReport)
     } catch (error) {
         console.error("Erro ao buscar relatório:", error);
         res.status(500).json({ error: "Erro ao buscar relatório" });
     }
 });
+app.put("/api/report/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params; // Get the userId from the URL
+      const updatedData = req.body; // Get the updated data from the request body
+  
+      console.log("Updating report for userId:", userId);
+      console.log("Updated data:", updatedData);
+  
+      // Find the report by userId and update it
+      const updatedReport = await Assessment.findOneAndUpdate(
+        { userId }, // Query to find the report
+        updatedData, // Data to update
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedReport) {
+        return res.status(404).json({ error: "Relatório não encontrado" });
+      }
+  
+      console.log("Relatório atualizado com sucesso:", updatedReport);
+      res.status(200).json({ message: "Relatório atualizado com sucesso!", updatedReport });
+    } catch (error) {
+      console.error("Erro ao atualizar relatório:", error);
+      res.status(500).json({ error: "Erro ao atualizar relatório" });
+    }
+  });
+
 
 app.delete("/api/report/:userId", async (req, res) => {
     try {

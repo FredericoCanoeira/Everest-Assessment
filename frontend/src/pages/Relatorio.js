@@ -367,8 +367,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+import generatePDF from "./generatePDF";
+
 
 const Relatorio = () => {
   const { id } = useParams();
@@ -376,6 +376,7 @@ const Relatorio = () => {
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  console.log("report",report)
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -401,31 +402,20 @@ const Relatorio = () => {
   }, [id]);
 
   const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-    doc.text(`Relatório de Avaliação - ${report.nome}`, 10, 10);
-
-    const tableData = [];
-    Object.keys(report.respostas).forEach((categoria) => {
-      Object.entries(report.respostas[categoria]).forEach(([key, value]) => {
-        tableData.push([categoria, key, value.text, value.points]);
-      });
-    });
-
-    doc.autoTable({
-      head: [["Categoria", "Questão", "Resposta", "Pontos"]],
-      body: tableData,
-    });
-
-    doc.save(`Relatorio_${id}.pdf`);
+    if (report) {
+      generatePDF(report); // Generate and download the PDF
+    }
   };
 
-  // Função para editar o relatório
+
   const handleEdit = () => {
     navigate(`/edit-relatorio/${id}`);
   };
 
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
+
+
 
   return (
     <div className="relatorio-container">
