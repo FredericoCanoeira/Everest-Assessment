@@ -407,7 +407,7 @@ const Sidebar = () => {
                 display: "block",
                 marginBottom: "10px",
                 textDecoration: "none",
-                color: selectedIndex === 4 ? "#007bff" : "white",
+                color: selectedIndex === 4 ? "white" : "#007bff",
                 backgroundColor:
                   selectedIndex === 4 ? "#007bff" : "",
 
@@ -446,7 +446,7 @@ const Sidebar = () => {
                 display: "block",
                 marginBottom: "10px",
                 textDecoration: "none",
-                color: selectedIndex === 3 ? "#007bff" : "white",
+                color: selectedIndex === 3 ? "white" : "#007bff",
                 backgroundColor:
                   selectedIndex === 3 ? "#007bff" : "",
 
@@ -489,7 +489,7 @@ const Sidebar = () => {
                 display: "block",
                 marginBottom: "10px",
                 textDecoration: "none",
-                color: selectedIndex === 7 ? "#007bff" : "white",
+                color: selectedIndex === 7 ? "white" : "#007bff",
                 backgroundColor:
                   selectedIndex === 7 ? "#007bff" : "",
               }}
@@ -530,7 +530,7 @@ const Sidebar = () => {
               to="/"
               style={{
                 display: "block",
-                marginTop: "280px",
+                marginTop: "180px",
                 textDecoration: "none",
                 color: "white",
 

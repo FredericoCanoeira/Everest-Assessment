@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import generatePDF from "./generatePDF";
 import logo from "../../src/asstes/VVVV.jpeg"
+import { Box, Button } from "@mui/material";
 
 const Relatorio = () => {
   const styles = {
@@ -172,6 +173,7 @@ const Relatorio = () => {
           <div style={styles.right}>935 462 360</div>
         </div>
       </div>
+      
     </div>
   );
 };
