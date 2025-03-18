@@ -1,19 +1,22 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { jwtDecode } from "jwt-decode";
 
-const PrivateRoute = ({ children, adminOnly }) => {
-  const { user } = useAuth();
+const PrivateRoute = ({ children, }) => {
+  const token = localStorage.getItem("token");
 
-  if (!user) {
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
-  if (adminOnly && !user.isAdmin) {
-    return <Navigate to="/" />;
+  try {
+    jwtDecode(token); // Check if token is valid
+    return children;
+  } catch (error) {
+    localStorage.removeItem("token");
+    return <Navigate to="/login" />;
   }
-
-  return children;
-};
+}
 
 export default PrivateRoute;

@@ -750,6 +750,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const app = express();
@@ -788,6 +791,7 @@ const AssessmentSchema = new mongoose.Schema({
     category: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
   });
+
   
 
 const SolicitationSchema = new mongoose.Schema({
@@ -968,6 +972,170 @@ app.delete("/api/report/:userId", async (req, res) => {
         console.error("Erro ao excluir relatório:", error);
         res.status(500).json({ error: "Erro ao excluir relatório" });
     }
+});
+
+// ✅ Admin Schema
+const adminSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  isAdmin: { type: Boolean, default: true },
+  fullName: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }  // Automatically set the current timestamp
+});
+
+const Admin = mongoose.model("Admin", adminSchema);
+
+
+// ✅ Middleware to Verify Token
+const verifyToken = (req, res, next) => {
+  const token = req.header("Authorization");
+  if (!token) return res.status(401).json({ error: "Access denied" });
+
+  try {
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.admin = verified;
+    next();
+  } catch (error) {
+    res.status(400).json({ error: "Invalid token" });
+  }
+};
+
+app.post("/register-super-admin", async (req, res) => {
+  try {
+    console.log("Request body:", req.body);
+
+    const { email, password, fullName } = req.body;
+
+    if (!email || !password || !fullName) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // ✅ Check database connection properly
+    if (mongoose.connection.readyState !== 1) {
+      console.error("Database not connected.");
+      return res.status(500).json({ error: "Database not connected" });
+    }
+
+    // ✅ Check if Super Admin already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(400).json({ error: "Super Admin already exists" });
+    }
+
+    // ✅ Hash password securely
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ Save new admin
+    const newAdmin = new Admin({
+      email,
+      password: hashedPassword,
+      fullName,
+      isAdmin: true,
+    });
+
+    await newAdmin.save();
+    res.status(201).json({ message: "Super Admin registered successfully" });
+
+  } catch (error) {
+    console.error("Error in register-super-admin:", error);
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
+  }
+});
+
+// ✅ Admin Login
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(400).json({ error: "Admin not found" });
+
+    const isMatch = bcrypt.compareSync(password, admin.password);
+    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+    const token = jwt.sign({ id: admin._id, email: admin.email, isAdmin: admin.isAdmin }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ message: "Login successful", token });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ✅ Middleware to Check if User is Super Admin
+const verifySuperAdmin = async (req, res, next) => {
+  try {
+    const admin = await Admin.findById(req.admin.id);
+    if (!admin || admin.email !== "admin@everest40.com") {
+      return res.status(403).json({ error: "Only Super Admin can perform this action" });
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// ✅ Add New Admin (Only Super Admin Can Do This)
+// ✅ Add New Admin (Only Super Admin Can Do This)
+app.post("/add-admin", verifyToken, verifySuperAdmin, async (req, res) => {
+  try {
+    const { fullName, email, password } = req.body;
+
+    // Check if admin already exists
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) return res.status(400).json({ error: "Admin already exists" });
+
+    // Hash the password
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    // Create a new admin with fullName and createdAt
+    const newAdmin = new Admin({
+      fullName,
+      email,
+      password: hashedPassword,
+      isAdmin: true,
+      createdAt: Date.now(), // Optional, as it's default to Date.now() in the schema
+    });
+
+    await newAdmin.save();
+
+    res.json({ message: "Admin added successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ✅ Get All Admins (Only Admins Can Access)
+app.get("/admins", verifyToken, async (req, res) => {
+  try {
+    if (!req.admin.isAdmin) return res.status(403).json({ error: "Unauthorized" });
+
+    // Fetch admins and include the password field
+    const admins = await Admin.find().select("fullName email password createdAt isAdmin");
+
+    res.json(admins);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
+// ✅ Delete an Admin (Only Super Admin Can Delete)
+app.delete("/delete-admin/:id", verifyToken, verifySuperAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const adminToDelete = await Admin.findById(id);
+    if (!adminToDelete) return res.status(404).json({ error: "Admin not found" });
+
+    // 🚀 Prevent Super Admin Deletion
+    if (adminToDelete.email === "admin@everest40.com") {
+      return res.status(403).json({ error: "Super Admin cannot be deleted" });
+    }
+
+    await Admin.findByIdAndDelete(id);
+    res.json({ message: "Admin deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.listen(port, () => console.log(`🚀 Servidor rodando na porta ${port}`));

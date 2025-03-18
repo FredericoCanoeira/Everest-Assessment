@@ -23,6 +23,16 @@ import Relatorio from "./pages/Relatorio";
 // Layout
 import Layout from "./components/common/Layout";
 import EditRelatorio from "./pages/EditRelatorio";
+import Sidebar from "./components/Sidebar";
+import AdminReports from "./pages/Admin/AdminReports";
+import AdminUsers from "./pages/Admin/AdminUsers";
+import Settings from "./pages/Settings";
+import AllAdmin from "./pages/Admin/AllAdmin";
+import AddNewAdmin from "./pages/Admin/AddNewAdmin";
+
+
+
+
 
 function App() {
   return (
@@ -39,25 +49,35 @@ function App() {
           <Route path="/payment-information" element={<Layout><PaymentInformation /></Layout>} />
           <Route path="/solicitacao" element={<Layout><Solicitacao /></Layout>} />
           <Route path="/obrigado" element={<Obrigado />} />
-          <Route path="/relatorio/:id" element={<Relatorio />} />
+          {/* <Route path="/relatorio/:id" element={<Relatorio />} /> */}
           <Route path="/edit-relatorio/:id" element={<Layout><EditRelatorio /></Layout>} />
-          
+
+
 
           {/* Rota protegida do Painel Administrativo */}
           <Route
-            path="/dashboard"
+            path="/admin/*"
             element={
-              <PrivateRoute adminOnly={true}>
-                <Dashboard />
+              <PrivateRoute>
+                <Sidebar />
               </PrivateRoute>
             }
-          />
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="relatorio/:id" element={<Relatorio />} />
+            <Route path="alladmin" element={<AllAdmin />} />
+            <Route path="addnewadmin" element={<AddNewAdmin />} />
+            <Route path="settings" element={<Settings />} />
+
+          </Route>
 
           {/* Página 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
-    </AuthProvider>  
+    </AuthProvider>
   );
 }
 

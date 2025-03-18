@@ -1,15 +1,70 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import generatePDF from "./generatePDF";
-
+import logo from "../../src/asstes/VVVV.jpeg"
 
 const Relatorio = () => {
+  const styles = {
+    body: {
+      fontFamily: 'Arial, sans-serif',
+      margin: '20px',
+      padding: '0',
+    },
+    container: {
+      width: '80%',
+      margin: 'auto',
+      padding: '20px',
+      height: "100%",
+      position: 'relative'
+    },
+    logo: {
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+      height: '70px',
+      width: '100px'
+    },
+    title: {
+      color: 'rgb(57, 57, 152)',
+      textAlign: 'left'
+    },
+    section: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderBottom: '12px solid #d9d9d9'
+    },
+    left: {
+      fontWeight: 'bold',
+      backgroundColor: '#d9e2f3',
+      width: '20%',
+      padding: '20px'
+    },
+    right: {
+      width: '80%',
+      padding: '8px'
+    },
+    table: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      marginTop: '20px',
+      textAlign: 'center'
+    },
+    thtd: {
+      border: '1px solid #ddd',
+      padding: '8px',
+      textAlign: 'left'
+    },
+    th: {
+      background: '#f0f0f0'
+    }
+  };
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  console.log("report",report)
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -36,10 +91,9 @@ const Relatorio = () => {
 
   const handleDownloadPDF = () => {
     if (report) {
-      generatePDF(report); // Generate and download the PDF
+      generatePDF(report);
     }
   };
-
 
   const handleEdit = () => {
     navigate(`/edit-relatorio/${id}`);
@@ -48,43 +102,78 @@ const Relatorio = () => {
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
 
-
-
   return (
-    <div className="relatorio-container">
-      <h1>Relatório de {report.nome}</h1>
+    <div style={styles.body}>
+      <div style={styles.container}>
+        <img src={logo} alt="Everest 4.0" style={styles.logo} />
+        <h2 style={styles.title}>Relatório Individual</h2>
 
-      {/* Exibindo os dados do formulário de solicitação */}
-      <h2>Informações Pessoais</h2>
-      <p><strong>Nome:</strong> {report.nome}</p>
-      <p><strong>Email:</strong> {report.email}</p>
-      <p><strong>Telefone:</strong> {report.telefone}</p>
-      <p><strong>BI:</strong> {report.bi}</p>
-
-      {/* Exibindo as informações do Assessment */}
-      <h2>Respostas da Avaliação</h2>
-      <p><strong>Resultado Final:</strong> {report.finalScore}%</p>
-      <p><strong>Classificação:</strong> {report.category}</p>
-
-      {Object.keys(report.respostas).map((categoria) => (
-        <div key={categoria}>
-          <h3>{categoria}</h3>
-          <ul>
-            {Object.entries(report.respostas[categoria]).map(([key, value]) => (
-              <li key={key}>
-                <strong>{key}:</strong> {value.text} - <em>Pontos: {value.points}</em>
-              </li>
-            ))}
-          </ul>
+        <div style={styles.section}>
+          <div style={styles.left}>Autoavaliação</div>
+          <div style={styles.right}>Liderança</div>
         </div>
-      ))}
 
-      <button onClick={handleDownloadPDF} className="btn-pdf">Baixar PDF</button>
-      <button onClick={handleEdit} className="btn-edit">Editar Relatório</button>
+        <div style={styles.section}>
+          <div style={styles.left}>Introdução</div>
+          <div style={styles.right}>Este relatório oferece uma análise detalhada do seu desempenho na autoavaliação...</div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.left}>Nome do Utilizador</div>
+          <div style={styles.right}>{report?.nome}</div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.left}>Resultado</div>
+          <div style={styles.right}>
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th style={{ ...styles.thtd, ...styles.th }}>Teste</th>
+                  <th style={{ ...styles.thtd, ...styles.th }}>Score</th>
+                  <th style={{ ...styles.thtd, ...styles.th }}>Resultado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(report?.respostas || {}).map(([area, respostas]) => (
+                  <tr key={area}>
+                    <td style={styles.thtd}>{area}</td>
+                    <td style={styles.thtd}>{Object.values(respostas).reduce((acc, curr) => acc + curr.points, 0)}</td>
+                    <td style={styles.thtd}>{report?.finalScore}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.left}>Classificação</div>
+          <div style={styles.right}>{report?.category}</div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.left}>Total Score</div>
+          <div style={styles.right}>{report?.totalScore}</div>
+        </div>
+        <div style={styles.section}>
+          <div style={styles.left}>Áreas de Melhoria</div>
+          <div style={styles.right}>
+          sit amet consectetur, adipisicing elit. Harum aut accusamus nihil commodi quos tempore eaque fugit tur dolore quis asperiores doloremque? Dolor!</div>
+        </div>
+        <div style={styles.section}>
+          <div style={styles.left}>Recomendações</div>
+          <div style={styles.right}>
+          Este relatório foi elaborado Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus quidem doloremqu axime. Aut rem non repellat, quia amet soluta architecto libero hic! Accusamus incidunt fuga blanditiis! com base nas respostas por você fornecidas...</div>
+        </div>
+
+        <div style={styles.section}>
+          <div style={styles.left}>Apoio ao Cliente Everest</div>
+          <div style={styles.right}>935 462 360</div>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default Relatorio;
-
-//****************************************

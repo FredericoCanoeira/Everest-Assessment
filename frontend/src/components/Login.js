@@ -1,48 +1,55 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Hook para navegação após login
-import { Link } from "react-router-dom"; // Componente Link para navegação
-import { useAuth } from "../context/AuthContext"; // Importando o contexto de autenticação
-import "../styles/Login.css"; // Importando estilos
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../styles/Login.css";
+import { login } from "../api/api";
+import { jwtDecode } from "jwt-decode";
 
-function Login() {
-  const [email, setEmail] = useState(""); // Estado para armazenar o email
-  const [password, setPassword] = useState(""); // Estado para armazenar a senha
-  const [error, setError] = useState(""); // Estado para mensagens de erro
-  const navigate = useNavigate(); // Hook para navegação
-  const { login } = useAuth(); // Pegando a função de login do contexto
 
-  // Função para processar o login
-  const handleLogin = (e) => {
-    e.preventDefault(); // Evita o recarregamento da página
+const Login = () => {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
 
-    // Validação básica: Checa se email e senha foram preenchidos
-    if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
-      return;
-    }
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    // Chama a função de login do AuthContext
-    const success = login(email, password);
-    if (success) {
-      navigate("/dashboard"); // Redireciona para o painel administrativo
-    } else {
-      setError("E-mail ou senha incorretos!"); // Exibe erro caso as credenciais sejam inválidas
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await login(form);
+      localStorage.setItem("token", data.token);
+      
+      // Decode token to check if Super Admin
+      const user = jwtDecode(data.token);
+      if (user.email === "admin@everest40.com") {
+        localStorage.setItem("isSuperAdmin", true);
+      } else {
+        localStorage.setItem("isSuperAdmin", false);
+      }
+
+      navigate("/admin/dashboard");
+    } catch (error) {
+      alert(error.response.data.error || "Login failed");
     }
   };
+
+
+
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Login</h2>
-        {error && <p className="error-message">{error}</p>} {/* Exibe mensagem de erro se houver */}
-        <form onSubmit={handleLogin}>
+        <h2>Super Admin Login</h2>
+       
+        <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email:</label>
             <input
               type="email"
+              name="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} // Atualiza o estado do email
+              onChange={handleChange}
               required
               placeholder="Digite seu email"
             />
@@ -52,8 +59,7 @@ function Login() {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} // Atualiza o estado da senha
+              name="password" onChange={handleChange}
               required
               placeholder="Digite sua senha"
             />
@@ -63,12 +69,12 @@ function Login() {
           </div>
         </form>
         <div className="auth-options">
-          {/* <p>Não tem uma conta? <Link to="/register" className="auth-link">Criar uma conta</Link></p> */}
           <p>Esqueceu sua senha? <Link to="/forgot-password" className="auth-link">Recuperar senha</Link></p>
+          <p>Create a Super Admin? <Link to="/register" className="auth-link">New Super Admin</Link></p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

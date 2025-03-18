@@ -1,51 +1,40 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
+import axios from "axios";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const SUPER_ADMIN = {
-    email: "admin@everest40.com",
-    password: "everest40",
-    isAdmin: true,
-  };
-
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-
-  // Função de login
-  const login = (email, password) => {
-    if (email === SUPER_ADMIN.email && password === SUPER_ADMIN.password) {
-      const adminUser = { email, isAdmin: true };
-      setUser(adminUser);
-      localStorage.setItem("user", JSON.stringify(adminUser));
-      return true;
-    }
-    return false;
-  };
-
-  // Função de logout
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-  };
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const token = localStorage.getItem("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = token;
+      setUser(JSON.parse(localStorage.getItem("user")));
     }
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  const login = async (email, password) => {
+    try {
+      const res = await axios.post("http://localhost:5000/login", { email, password });
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify({ email, isAdmin: res.data.isAdmin }));
+      axios.defaults.headers.common["Authorization"] = res.data.token;
+      setUser({ email, isAdmin: res.data.isAdmin });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    delete axios.defaults.headers.common["Authorization"];
+    setUser(null);
+  };
+
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 };
 
-// Hook personalizado para acessar o contexto de autenticação
 export const useAuth = () => useContext(AuthContext);
-
-export default AuthContext;
