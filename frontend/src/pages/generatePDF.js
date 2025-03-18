@@ -1,6 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../asstes/logo.jpeg"; // Ensure this path is correct
+import logo from "../../src/asstes/VVVV.jpeg"; // Ensure this path is correct
 
 const generatePDF = (report) => {
   if (!report || !report.userId || !report.nome) {
@@ -10,40 +10,48 @@ const generatePDF = (report) => {
 
   const doc = new jsPDF();
 
-  // Add logo to the PDF
-  doc.addImage(logo, "PNG", 10, 10, 50, 20); // Adjust position and size as needed
+  // Header with Logo and Title
+  doc.addImage(logo, "PNG", 150, 10, 40, 20); // Logo on the right
+  doc.setFontSize(22);
+  doc.setTextColor(40, 40, 120);
+  doc.text("Relatório Individual", 10, 30);
 
-  // Add title
-  doc.setFontSize(18);
-  doc.text("Relatório Individual", 10, 40);
-
-  // Add introduction
+  // Introduction Section
   doc.setFontSize(12);
+  doc.setTextColor(50, 50, 50);
   doc.text(
-    "Este relatório oferece uma análise detalhada do seu desempenho no Teste Psicotécnico, destacando seus pontos fortes e áreas a serem aprimoradas. O objetivo é orientá-lo no desenvolvimento de habilidades essenciais para o mercado de trabalho.",
+    "Este relatório oferece uma análise detalhada do seu desempenho na avaliação, destacando seus pontos fortes e áreas a serem aprimoradas.",
     10,
-    50,
+    40,
     { maxWidth: 180 }
   );
 
-  // Add user information dynamically
+  // User Information
   doc.setFontSize(14);
-  doc.text(`Nome do Utilizador: ${report.nome}`, 10, 70);
-  doc.text(`Email: ${report.email}`, 10, 80);
-  doc.text(`Telefone: ${report.telefone}`, 10, 90);
-  doc.text(`BI: ${report.bi}`, 10, 100);
+  doc.setTextColor(0, 0, 0);
+  doc.text("Informações do Utilizador", 10, 60);
 
-  // Add assessment details
-  doc.setFontSize(14);
-  doc.text("Detalhes da Avaliação", 10, 110);
-  doc.setFontSize(12);
-  doc.text(`Pontuação Total: ${report.totalScore}`, 10, 120);
-  doc.text(`Pontuação Final: ${report.finalScore}`, 10, 130);
-  doc.text(`Categoria: ${report.category}`, 10, 140);
+  const userInfo = [
+    ["Nome:", report.nome],
+    ["Email:", report.email],
+    ["Telefone:", report.telefone],
+    ["BI:", report.bi],
+    ["Pontuação Total:", report.totalScore],
+    ["Pontuação Final:", report.finalScore],
+    ["Categoria:", report.category],
+  ];
 
-  // Add assessment categories and answers
+  autoTable(doc, {
+    startY: 65,
+    head: [["Campo", "Detalhe"]],
+    body: userInfo,
+    styles: { cellPadding: 2, fontSize: 10 },
+    theme: "striped",
+  });
+
+  // Assessment Responses
   doc.setFontSize(14);
-  doc.text("Categorias e Respostas da Avaliação", 10, 150);
+  doc.text("Detalhes da Avaliação", 10, doc.lastAutoTable.finalY + 10);
 
   const tableData = [];
   Object.keys(report.respostas).forEach((categoria) => {
@@ -53,28 +61,44 @@ const generatePDF = (report) => {
   });
 
   autoTable(doc, {
-    startY: 160,
+    startY: doc.lastAutoTable.finalY + 15,
     head: [["Categoria", "Pergunta", "Resposta", "Pontuação"]],
     body: tableData,
+    styles: { cellPadding: 2, fontSize: 10 },
+    columnStyles: { 0: { cellWidth: 60 } },
+    theme: "grid",
   });
 
-  // Add recommendations dynamically
+  // Recommendations and Improvements
   doc.setFontSize(14);
-  doc.text("Áreas de Melhoria", 10, doc.lastAutoTable.finalY + 10);
+  doc.text("Áreas de Melhoria e Recomendações", 10, doc.lastAutoTable.finalY + 15);
+
   doc.setFontSize(12);
-  doc.text("Recomendações:", 10, doc.lastAutoTable.finalY + 20);
+  doc.setTextColor(80, 80, 80);
   doc.text(
-    report.recomendacoes || "- Solicite já o serviço de mentoria, para melhorar o seu desempenho.",
+    report.recomendacoes ||
+      "- Solicite já o serviço de mentoria para melhorar o seu desempenho.",
     10,
-    doc.lastAutoTable.finalY + 30
+    doc.lastAutoTable.finalY + 25,
+    { maxWidth: 180 }
   );
 
   // Footer
   doc.setFontSize(10);
-  doc.text("Este relatório foi gerado automaticamente após a conclusão da avaliação.", 10, doc.lastAutoTable.finalY + 50);
-  doc.text("Se tiver alguma dúvida ou precisar de mais detalhes, entre em contato com nosso suporte.", 10, doc.lastAutoTable.finalY + 60);
+  doc.setTextColor(100, 100, 100);
+  doc.text(
+    "Este relatório foi gerado automaticamente após a conclusão da avaliação.",
+    10,
+    doc.lastAutoTable.finalY + 45
+  );
 
-  // Save the PDF
+  doc.text(
+    "Se tiver alguma dúvida ou precisar de mais detalhes, entre em contato com nosso suporte.",
+    10,
+    doc.lastAutoTable.finalY + 55
+  );
+
+  // Save PDF
   console.log("Saving PDF...");
   doc.save(`Relatorio_${report.userId}.pdf`);
 };

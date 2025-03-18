@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import generatePDF from "./generatePDF";
 import logo from "../../src/asstes/VVVV.jpeg"
 import { Box, Button } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Relatorio = () => {
   const styles = {
@@ -97,7 +99,7 @@ const Relatorio = () => {
   };
 
   const handleEdit = () => {
-    navigate(`/edit-relatorio/${id}`);
+    navigate(`/admin/edit-relatorio/${id}`);
   };
 
   if (loading) return <p>Carregando...</p>;
@@ -160,12 +162,12 @@ const Relatorio = () => {
         <div style={styles.section}>
           <div style={styles.left}>Áreas de Melhoria</div>
           <div style={styles.right}>
-          sit amet consectetur, adipisicing elit. Harum aut accusamus nihil commodi quos tempore eaque fugit tur dolore quis asperiores doloremque? Dolor!</div>
+            sit amet consectetur, adipisicing elit. Harum aut accusamus nihil commodi quos tempore eaque fugit tur dolore quis asperiores doloremque? Dolor!</div>
         </div>
         <div style={styles.section}>
           <div style={styles.left}>Recomendações</div>
           <div style={styles.right}>
-          Este relatório foi elaborado Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus quidem doloremqu axime. Aut rem non repellat, quia amet soluta architecto libero hic! Accusamus incidunt fuga blanditiis! com base nas respostas por você fornecidas...</div>
+            Este relatório foi elaborado Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus quidem doloremqu axime. Aut rem non repellat, quia amet soluta architecto libero hic! Accusamus incidunt fuga blanditiis! com base nas respostas por você fornecidas...</div>
         </div>
 
         <div style={styles.section}>
@@ -173,7 +175,15 @@ const Relatorio = () => {
           <div style={styles.right}>935 462 360</div>
         </div>
       </div>
-      
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px" }}>
+        <Button onClick={handleDownloadPDF} sx={{ background: "green", color: "white", textTransform: "capitalize" }}>
+          Downlode Pdf  <DownloadIcon sx={{ fontSize: "25px" }} />
+        </Button>
+        <Button onClick={handleEdit} sx={{ background: "#007bff", color: "white", textTransform: "capitalize" }}>
+          Edit Report   <EditIcon sx={{ fontSize: "25px" }} />
+        </Button>
+
+      </Box>
     </div>
   );
 };

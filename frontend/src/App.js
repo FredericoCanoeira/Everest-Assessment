@@ -50,7 +50,7 @@ function App() {
           <Route path="/solicitacao" element={<Layout><Solicitacao /></Layout>} />
           <Route path="/obrigado" element={<Obrigado />} />
           {/* <Route path="/relatorio/:id" element={<Relatorio />} /> */}
-          <Route path="/edit-relatorio/:id" element={<Layout><EditRelatorio /></Layout>} />
+          {/* <Route path="/edit-relatorio/:id" element={<Layout><EditRelatorio /></Layout>} /> */}
 
 
 
@@ -67,6 +67,7 @@ function App() {
             <Route path="reports" element={<AdminReports />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="relatorio/:id" element={<Relatorio />} />
+            <Route path="edit-relatorio/:id" element={<EditRelatorio />} />
             <Route path="alladmin" element={<AllAdmin />} />
             <Route path="addnewadmin" element={<AddNewAdmin />} />
             <Route path="settings" element={<Settings />} />
