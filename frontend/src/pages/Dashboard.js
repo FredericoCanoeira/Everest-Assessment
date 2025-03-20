@@ -26,13 +26,13 @@ const Dashboard = () => {
               {/* iteam-1 */}
               <Box sx={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", p: "15px", borderRadius: "10px" }}>
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <Box>
-                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>Today's money</Typography>
+                  {/* <Box>
+                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>Testes realizados hoje</Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <Typography sx={{ color: "#344767", fontWeight: 600, fontSize: "18px" }}>{`$${commaNumber(500030)}`}</Typography>
                       <Typography sx={{ color: "#86D71D", fontWeight: 600 }}>+55%</Typography>
                     </Box>
-                  </Box>
+                  </Box> */}
                   <Box sx={{ background: "#007bff", borderRadius: "10px", width: "50px", height: "50px", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <AttachMoneyIcon sx={{ color: "white" }} />
                   </Box>
@@ -44,7 +44,7 @@ const Dashboard = () => {
               <Box sx={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", p: "15px", borderRadius: "10px" }}>
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <Box>
-                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>today's users</Typography>
+                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>testes Hoje</Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <Typography sx={{ color: "#344767", fontWeight: 600, fontSize: "18px" }}>{`$${commaNumber(500030)}`}</Typography>
                       <Typography sx={{ color: "#86D71D", fontWeight: 600 }}>+55%</Typography>
@@ -61,7 +61,7 @@ const Dashboard = () => {
               <Box sx={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", p: "15px", borderRadius: "10px" }}>
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <Box>
-                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>New clients</Typography>
+                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>Ranking</Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <Typography sx={{ color: "#344767", fontWeight: 600, fontSize: "18px" }}>{`$${commaNumber(500030)}`}</Typography>
                       <Typography sx={{ color: "red", fontWeight: 600 }}>-02%</Typography>
@@ -78,7 +78,7 @@ const Dashboard = () => {
               <Box sx={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px", p: "15px", borderRadius: "10px" }}>
                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                   <Box>
-                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>Sales</Typography>
+                    <Typography sx={{ color: "#AFB5C3", fontWeight: 600, fontSize: "16px" }}>Novas solicitacoes</Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <Typography sx={{ color: "#344767", fontWeight: 600, fontSize: "18px" }}>{`$${commaNumber(500030)}`}</Typography>
                       <Typography sx={{ color: "#007bff", fontWeight: 600 }}>+5%</Typography>
