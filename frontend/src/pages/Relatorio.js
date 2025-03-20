@@ -1,66 +1,66 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import generatePDF from "./generatePDF";
-import logo from "../../src/asstes/VVVV.jpeg"
+import logo from "../../src/asstes/VVVV.jpeg";
 import { Box, Button } from "@mui/material";
-import DownloadIcon from '@mui/icons-material/Download';
-import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from "@mui/icons-material/Download";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Relatorio = () => {
   const styles = {
     body: {
-      fontFamily: 'Arial, sans-serif',
-      margin: '20px',
-      padding: '0',
+      fontFamily: "Arial, sans-serif",
+      margin: "20px",
+      padding: "0",
     },
     container: {
-      width: '80%',
-      margin: 'auto',
-      padding: '20px',
+      width: "80%",
+      margin: "auto",
+      padding: "20px",
       height: "100%",
-      position: 'relative'
+      position: "relative",
     },
     logo: {
-      position: 'absolute',
-      top: '20px',
-      right: '20px',
-      height: '70px',
-      width: '100px'
+      position: "absolute",
+      top: "20px",
+      right: "20px",
+      height: "70px",
+      width: "100px",
     },
     title: {
-      color: 'rgb(57, 57, 152)',
-      textAlign: 'left'
+      color: "rgb(57, 57, 152)",
+      textAlign: "left",
     },
     section: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      borderBottom: '12px solid #d9d9d9'
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderBottom: "12px solid #d9d9d9",
     },
     left: {
-      fontWeight: 'bold',
-      backgroundColor: '#d9e2f3',
-      width: '20%',
-      padding: '20px'
+      fontWeight: "bold",
+      backgroundColor: "#d9e2f3",
+      width: "20%",
+      padding: "20px",
     },
     right: {
-      width: '80%',
-      padding: '8px'
+      width: "80%",
+      padding: "8px",
     },
     table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-      marginTop: '20px',
-      textAlign: 'center'
+      width: "100%",
+      borderCollapse: "collapse",
+      marginTop: "20px",
+      textAlign: "center",
     },
     thtd: {
-      border: '1px solid #ddd',
-      padding: '8px',
-      textAlign: 'left'
+      border: "1px solid #ddd",
+      padding: "8px",
+      textAlign: "left",
     },
     th: {
-      background: '#f0f0f0'
-    }
+      background: "#f0f0f0",
+    },
   };
 
   const { id } = useParams();
@@ -105,6 +105,8 @@ const Relatorio = () => {
   if (loading) return <p>Carregando...</p>;
   if (error) return <p>{error}</p>;
 
+  const respostasEntries = Object.entries(report?.respostas || {});
+
   return (
     <div style={styles.body}>
       <div style={styles.container}>
@@ -118,7 +120,9 @@ const Relatorio = () => {
 
         <div style={styles.section}>
           <div style={styles.left}>Introdução</div>
-          <div style={styles.right}>Este relatório oferece uma análise detalhada do seu desempenho na autoavaliação...</div>
+          <div style={styles.right}>
+            Este relatório oferece uma análise detalhada do seu desempenho na autoavaliação...
+          </div>
         </div>
 
         <div style={styles.section}>
@@ -138,11 +142,26 @@ const Relatorio = () => {
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(report?.respostas || {}).map(([area, respostas]) => (
+                {respostasEntries.map(([area, respostas], index) => (
                   <tr key={area}>
                     <td style={styles.thtd}>{area}</td>
-                    <td style={styles.thtd}>{Object.values(respostas).reduce((acc, curr) => acc + curr.points, 0)}</td>
-                    <td style={styles.thtd}>{report?.finalScore}%</td>
+                    <td style={styles.thtd}>
+                      {Object.values(respostas).reduce((acc, curr) => acc + curr.points, 0)}
+                    </td>
+                    {index === 0 && (
+                      <td
+                        style={{
+                          ...styles.thtd,
+                          fontWeight: "bold",
+                          fontSize: "18px",
+                          textAlign: "center",
+                          verticalAlign: "middle",
+                        }}
+                        rowSpan={respostasEntries.length}
+                      >
+                        {report?.finalScore}%
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -157,17 +176,21 @@ const Relatorio = () => {
 
         <div style={styles.section}>
           <div style={styles.left}>Total Score</div>
-          <div style={styles.right}>{report?.totalScore}</div>
+          <div style={styles.right}>{report?.finalScore}%</div>
         </div>
+
         <div style={styles.section}>
           <div style={styles.left}>Áreas de Melhoria</div>
           <div style={styles.right}>
-            sit amet consectetur, adipisicing elit. Harum aut accusamus nihil commodi quos tempore eaque fugit tur dolore quis asperiores doloremque? Dolor!</div>
+            sit amet consectetur, adipisicing elit. Harum aut accusamus nihil commodi quos tempore eaque fugit tur dolore quis asperiores doloremque? Dolor!
+          </div>
         </div>
+
         <div style={styles.section}>
           <div style={styles.left}>Recomendações</div>
           <div style={styles.right}>
-            Este relatório foi elaborado Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus quidem doloremqu axime. Aut rem non repellat, quia amet soluta architecto libero hic! Accusamus incidunt fuga blanditiis! com base nas respostas por você fornecidas...</div>
+            Este relatório foi elaborado Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus quidem doloremqu axime. Aut rem non repellat, quia amet soluta architecto libero hic! Accusamus incidunt fuga blanditiis! com base nas respostas por você fornecidas...
+          </div>
         </div>
 
         <div style={styles.section}>
@@ -177,12 +200,11 @@ const Relatorio = () => {
       </div>
       <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px" }}>
         <Button onClick={handleDownloadPDF} sx={{ background: "green", color: "white", textTransform: "capitalize" }}>
-          Downlode Pdf  <DownloadIcon sx={{ fontSize: "25px" }} />
+          Download PDF <DownloadIcon sx={{ fontSize: "25px" }} />
         </Button>
         <Button onClick={handleEdit} sx={{ background: "#007bff", color: "white", textTransform: "capitalize" }}>
-          Edit Report   <EditIcon sx={{ fontSize: "25px" }} />
+          Edit Report <EditIcon sx={{ fontSize: "25px" }} />
         </Button>
-
       </Box>
     </div>
   );

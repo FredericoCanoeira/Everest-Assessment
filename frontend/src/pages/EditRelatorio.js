@@ -1,3 +1,4 @@
+import { Box, CircularProgress, Container } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -83,7 +84,7 @@ const EditRelatorio = () => {
         text: "Relatório atualizado com sucesso!",
         confirmButtonText: "OK",
       }).then(() => {
-        navigate(`/relatorio/${id}`); // Navigate back to the report view
+        navigate(`/admin/relatorio/${id}`); // Navigate back to the report view
       });
     } catch (err) {
       console.error("Erro ao atualizar relatório:", err);
@@ -101,82 +102,96 @@ const EditRelatorio = () => {
     }
   };
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="edit-relatorio-container">
-      <h1>Editar Relatório de {report.nome}</h1>
-      <form onSubmit={handleSubmit}>
+    <Box>
+      <Container sx={{display:"flex",alignItems:"center",justifyContent:"center"}}>
         <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>Nome : </label> <br />
-          <input
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-            type="text"
-            name="nome"
-            value={report.nome}
-            onChange={handleInputChange}
-          />
+          <h1>Editar Relatório  Individual {report.nome}</h1>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>Nome : </label> <br />
+              <input
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+                type="text"
+                name="nome"
+                value={report.nome}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br />
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>Email : </label> <br />
+              <input
+                type="email"
+                name="email"
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+                value={report.email}
+                onChange={handleInputChange}
+              />
+            </div>
+            <br />
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>Telefone:</label> <br />
+              <input
+                type="text"
+                name="telefone"
+                value={report.telefone}
+                onChange={handleInputChange}
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+              />
+            </div>
+            <br />
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>BI:</label> <br />
+              <input
+                type="text"
+                name="bi"
+                value={report.bi}
+                onChange={handleInputChange}
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+              />
+            </div>
+            <br />
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>Resultado Final (%): </label> <br />
+              <input
+                type="number"
+                name="finalScore"
+                value={report.finalScore}
+                onChange={handleInputChange}
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+              />
+            </div>
+            <br />
+            <div>
+              <label style={{ fontSize: "18px", fontWeight: 500, color: "grey" }}>Classificação : </label> <br />
+              <input
+                type="text"
+                name="category"
+                value={report.category}
+                onChange={handleInputChange}
+                style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid grey", borderRadius: "3px", padding: "5px", width: "300px" }}
+              />
+            </div>
+            <br />
+            <button type="submit">Salvar Alterações</button>
+          </form>
         </div>
-        <br />
-        <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>Email : </label> <br />
-          <input
-            type="email"
-            name="email"
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-            value={report.email}
-            onChange={handleInputChange}
-          />
-        </div>
-        <br />
-        <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>Telefone:</label> <br />
-          <input
-            type="text"
-            name="telefone"
-            value={report.telefone}
-            onChange={handleInputChange}
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-          />
-        </div>
-        <br />
-        <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>BI:</label> <br />
-          <input
-            type="text"
-            name="bi"
-            value={report.bi}
-            onChange={handleInputChange}
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-          />
-        </div>
-        <br />
-        <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>Resultado Final (%): </label> <br />
-          <input
-            type="number"
-            name="finalScore"
-            value={report.finalScore}
-            onChange={handleInputChange}
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-          />
-        </div>
-        <br />
-        <div>
-          <label style={{ fontSize: "18px", fontWeight: 500, color: "green" }}>Classificação : </label> <br />
-          <input
-            type="text"
-            name="category"
-            value={report.category}
-            onChange={handleInputChange}
-            style={{ marginLeft: "1px", marginTop: "5px", outline: "none", border: "1.5px solid green", borderRadius: "3px", padding: "5px", width: "300px" }}
-          />
-        </div>
-        <br />
-        <button type="submit">Salvar Alterações</button>
-      </form>
-    </div>
+      </Container>
+    </Box>
   );
 };
 

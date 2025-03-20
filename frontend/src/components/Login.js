@@ -38,9 +38,9 @@ const Login = () => {
 
 
   return (
-    <div className="login-container">
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center", height: "100vh"}}>
       <div className="login-box">
-        <h2>Super Admin Login</h2>
+        <h2> Login</h2>
        
         <form onSubmit={handleSubmit}>
           <div className="input-group">

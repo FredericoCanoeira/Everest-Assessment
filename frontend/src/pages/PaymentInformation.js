@@ -18,7 +18,7 @@
 //     <div className="payment-info-container">
 //       <div className="payment-info">
 //         <h2>Informações de Pagamento</h2>
-        
+
 //         <div className="payment-details">
 //           <p><strong>Valor do investimento:</strong> Kz 65 000,00</p>
 //           <p><strong>IBAN:</strong> AO06005100009283673310193</p>
@@ -47,7 +47,7 @@
 // export default PaymentInformation;
 
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/PaymentInformation.css';
 
 const PaymentInformation = () => {
@@ -68,7 +68,7 @@ const PaymentInformation = () => {
     <div className="payment-info-container">
       <div className="payment-info">
         <h2>Informações de Pagamento</h2>
-        
+
         <div className="payment-details">
           <p><strong>Valor do investimento:</strong> Kz 65 000,00</p>
           <p><strong>IBAN:</strong> AO06005100009283673310193</p>
@@ -85,8 +85,8 @@ const PaymentInformation = () => {
         <div className="continue-question">
           <p><strong>Pretendes continuar?</strong></p>
           <div className="continue-buttons">
-            <button onClick={() => handleContinue('sim')}>Sim</button>
-            <button onClick={() => handleContinue('nao')}>Não</button>
+            <button style={{ background: "#007bff", color: "white" }} onClick={() => handleContinue('sim')}>Sim</button>
+            <button style={{ background: "green", color: "white" }} onClick={() => handleContinue('nao')}>Não</button>
           </div>
         </div>
       </div>

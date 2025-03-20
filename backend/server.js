@@ -829,6 +829,47 @@ app.post("/api/assessment", async (req, res) => {
     }
   });
 
+// 🛠️ Rota para buscar avaliações
+app.get("/api/assessment", async (req, res) => {
+  try {
+      const { userId } = req.query;
+
+      let query = {};
+      if (userId) {
+          query.userId = userId;
+      }
+
+      const assessments = await Assessment.find(query);
+
+      if (assessments.length === 0) {
+          return res.status(404).json({ message: "Nenhuma avaliação encontrada." });
+      }
+
+      res.status(200).json(assessments);
+  } catch (error) {
+      console.error("Erro ao buscar avaliações:", error);
+      res.status(500).json({ error: "Erro ao buscar avaliações" });
+  }
+});
+app.delete("/api/assessment", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    const deletedAssessments = await Assessment.deleteMany({ userId });
+
+    if (deletedAssessments.deletedCount === 0) {
+      return res.status(404).json({ message: "No assessments found for this user" });
+    }
+
+    res.json({ message: "Assessments deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting assessments:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+});
 
 // 🛠️ Rota para salvar uma solicitação
 app.post("/api/solicitacao", async (req, res) => {

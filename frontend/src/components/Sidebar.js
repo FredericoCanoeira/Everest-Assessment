@@ -36,6 +36,7 @@ import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
 import { ToastContainer } from "react-toastify";
 import logo from "../asstes/evereset.png"
 import logo1 from "../asstes/logo1.png"
+const isSuperAdmin = localStorage.getItem("isSuperAdmin") === "true"; // Check if user is a super admin
 
 // Active color ListItem start
 const useStyles = makeStyles((theme) => ({
@@ -164,7 +165,7 @@ const Sidebar = () => {
   };
 
   const handleListItemClick = (event, index) => {
-    console.log(index);
+
 
     setSelectedIndex(index);
     if (index === 1) {
@@ -257,6 +258,12 @@ const Sidebar = () => {
     // setSubSelectedIndex(index);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove auth token
+    localStorage.removeItem("isSuperAdmin"); // Remove super admin status (if stored)
+
+    navigate("/login"); // Correct way to navigate
+  };
   return (
     <Box
       sx={{
@@ -401,7 +408,7 @@ const Sidebar = () => {
                 </Tooltip>
               </ListItem>
             </Link>
-            <Link
+            {isSuperAdmin && <Link
               to="/admin/alladmin"
               style={{
                 display: "block",
@@ -439,9 +446,9 @@ const Sidebar = () => {
                   </ListItemButton>
                 </Tooltip>
               </ListItem>
-            </Link>
+            </Link>}
             <Link
-              to="/admin/users"
+              to="/admin/assessment"
               style={{
                 display: "block",
                 marginBottom: "10px",
@@ -454,7 +461,7 @@ const Sidebar = () => {
               onClick={(event) => handleListItemClick(event, 3)}
             >
               <ListItem style={{ padding: "0px", width: "200px" }}>
-                <Tooltip title={"All Users"}>
+                <Tooltip title={"All Assessment"}>
                   <ListItemButton
                     selected={selectedIndex === 3}
                     sx={{
@@ -464,12 +471,12 @@ const Sidebar = () => {
                   >
                     <SupervisorAccountIcon
                       sx={{
-                        fontSize: "22px",
+                        fontSize: "18px",
                         mr: "10px",
                       }}
                     />
                     <ListItemText sx={{ opacity: open ? 1 : 0, ml: 1 }}>
-                      All Users
+                      Assessment
                     </ListItemText>
 
                     <ExpandCircleDown
@@ -525,41 +532,37 @@ const Sidebar = () => {
             </Link>
 
 
-
-            <NavLink
-              to="/"
+            <ListItem
+              onClick={handleLogout}
               style={{
                 display: "block",
                 marginTop: "180px",
                 textDecoration: "none",
                 color: "white",
+                padding: "0px", width: "200px"
 
               }}
+
             >
-              <ListItem
-                // selected={selectedIndex === 9}
-                // onClick={logout}
-                style={{ padding: "0px", width: "200px" }}
-              >
-                <Tooltip title={"Log Out"}>
-                  <ListItemButton
+              <Tooltip title={"Log Out"}>
+                <ListItemButton
+                  sx={{
+                    justifyContent: open ? "initial" : "center",
+                    p: "5px 3px 5px 20px",
+                  }}
+                >
+                  <ExitToAppRoundedIcon
                     sx={{
-                      justifyContent: open ? "initial" : "center",
-                      p: "5px 3px 5px 20px",
+                      fontSize: "23px",
                     }}
-                  >
-                    <ExitToAppRoundedIcon
-                      sx={{
-                        fontSize: "23px",
-                      }}
-                    />
-                    <ListItemText sx={{ opacity: open ? 1 : 0, ml: "17px" }}>
-                      Log Out
-                    </ListItemText>
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
-            </NavLink>
+                  />
+                  <ListItemText sx={{ opacity: open ? 1 : 0, ml: "17px" }}>
+                    Log Out
+                  </ListItemText>
+                </ListItemButton>
+              </Tooltip>
+            </ListItem>
+
           </List>
         </Box>
       </Drawer>

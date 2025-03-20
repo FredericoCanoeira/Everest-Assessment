@@ -29,6 +29,7 @@ import AdminUsers from "./pages/Admin/AdminUsers";
 import Settings from "./pages/Settings";
 import AllAdmin from "./pages/Admin/AllAdmin";
 import AddNewAdmin from "./pages/Admin/AddNewAdmin";
+import AssessmentList from "./pages/Admin/AssessmentList";
 
 
 
@@ -42,7 +43,7 @@ function App() {
           {/* Rotas públicas */}
           <Route path="/" element={<Layout><Home /></Layout>} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Layout><Login /></Layout>} />
+          <Route path="/login" element={<Login />} />
           <Route path="/form" element={<Layout><Form /></Layout>} />
           <Route path="/results" element={<Layout><Results /></Layout>} />
           <Route path="/assessment" element={<AssessmentForm />} />
@@ -71,6 +72,7 @@ function App() {
             <Route path="alladmin" element={<AllAdmin />} />
             <Route path="addnewadmin" element={<AddNewAdmin />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="assessment" element={<AssessmentList />} />
 
           </Route>
 
